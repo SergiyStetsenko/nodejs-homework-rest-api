@@ -1,20 +1,23 @@
 const { Router } = require("express");
-const ControllerContact = require("../../routes/api/controller");
+const contoller = require("../../routes/api/controller");
+
 const { validateContact, validatePatchContact } = require("./helpers/validate");
 
 const router = Router();
 
-router.get("/", ControllerContact.getContacts);
+router.get("/", contoller.getContacts);
 
-router.get("/:contactId", ControllerContact.findContactById);
+router.get("/:contactId", contoller.findContactById);
 
-router.post("/", validateContact, ControllerContact.postContact);
-router.delete("/:contactId", ControllerContact.deleteContact);
+router.post("/", validateContact, contoller.postContact);
+router.delete("/:contactId", contoller.deleteContact);
+
+router.patch("/:contactId", validatePatchContact, contoller.patchContact);
 
 router.patch(
-  "/:contactId",
+  "/:contactId/favorite",
   validatePatchContact,
-  ControllerContact.patchContact
+  contoller.patchFavorite
 );
 
 module.exports = router;
