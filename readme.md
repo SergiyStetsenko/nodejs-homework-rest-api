@@ -53,7 +53,7 @@
 ```@ DELETE /api/contacts/:contactId``` - удаляет контакт по Id c Conbook
 
 
-```@ PATCH /api/contacts/:contactId``` -  изменяет информацию о контакте(мин. одно изменения)
+```@ PATCH /api/contacts/:contactId``` -  изменяет информацию о контакте (мин. одно изменения)
 
 
 ```@ PATCH /api/contacts/:contactId/favorite``` - показывает поле статуса 
