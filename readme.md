@@ -47,7 +47,7 @@
 ```@ GET /api/contacts/:contactId```  - ищет контакт с указаным Id
 
 
-```@ POST /api/contacts``` - добавляет нового пользовалетя 
+```@ POST /api/contacts``` - добавляет нового пользователя 
 
 
 ```@ DELETE /api/contacts/:contactId``` - удаляет контакт по Id c Conbook
