@@ -6,7 +6,8 @@ const logger = require("morgan");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const path = require("path");
-const contactsRouter = require("../routes/api/contacts");
+const contactsRouter = require("../routes/api/contacts/contacts");
+const userRouter = require("../routes/api/users/Router")
 
 dotenv.config();
 
@@ -54,6 +55,7 @@ class Server {
   }
   initRoutes() {
     this.server.use("/api/contacts", contactsRouter);
+    this.server.use("/", userRouter)
   }
 
   initErrorHandling() {
