@@ -28,4 +28,5 @@ function validatePatchContact(req, res, next) {
 }
 
 exports.validateContact = validateContact;
+
 exports.validatePatchContact = validatePatchContact;

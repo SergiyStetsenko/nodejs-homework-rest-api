@@ -6,6 +6,9 @@ const userSchema = new Schema({
   username: { type: String, required: true },
   email: { type: String, required: [true, "Email is required"], unique: true },
   passwordHash: { type: String, required: [true, "Password is required"] },
+  avatarURL: {
+    type: String,
+  },
   subscription: {
     type: String,
     enum: ["starter", "pro", "business"],

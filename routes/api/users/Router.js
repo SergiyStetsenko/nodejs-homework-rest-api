@@ -5,10 +5,10 @@ const {
   validateUserAuth,
   subscriptionValid,
 } = require("../helpers/userValidate");
-const { authService } = require("./userService");
+const { authService, upload, compressImage } = require("./userService");
 const { prepereUser } = require("../auth/user_serialize");
-const { prepareUserWithToken } = require("../auth/auth_serializer");
 const { authorize } = require("../auth/authorization");
+
 
 const router = Router();
 
@@ -26,7 +26,7 @@ router.post(
   validateLogin,
   asuncWrapper(async (req, res, next) => {
     const userWithToken = await authService.singLogin(req.body);
-    return res.status(200).send(prepareUserWithToken(userWithToken));
+    return res.status(200).send(userWithToken);
   })
 );
 
@@ -41,7 +41,6 @@ router.post(
 
 router.get("/users/current", authorize, (req, res, next) => {
   const { email, username, subscription } = req.user;
-
   res.status(200).send({ email, username, subscription });
 });
 
@@ -49,5 +48,16 @@ router.patch("/users/subs", subscriptionValid, async (req, res, next) => {
   await authService.subscripStat(req.body);
   return res.status(200).send(req.body);
 });
+
+router.patch(
+  "/users/avatars",
+  authorize,
+  upload.single("avatar"),
+  compressImage,
+  async (req, res, next) => {
+    const userAvarav = await authService.updateAvatar(req);
+    return res.status(200).send(userAvarav);
+  }
+);
 
 module.exports = router;

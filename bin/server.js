@@ -38,18 +38,19 @@ class Server {
     this.server.use(express.json());
     this.server.use(cors({ origin: "*" }));
     this.server.use(logger("dev"));
+    this.server.use("/avatars", express.static('public/avatars'))
   }
   async initDatabase() {
-    try {
+    try { 
       const { MONGODB_URI } = process.env;
       await mongoose.connect(MONGODB_URI, {
+        useFindAndModify: false,
         useUnifiedTopology: true,
         useNewUrlParser: true,
         useCreateIndex: true,
       });
       console.log("Database connection successful");
     } catch (err) {
-      console.log(err);
       process.exit(1);
     }
   }

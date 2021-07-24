@@ -6,7 +6,8 @@ function validateUserAuth(req, res, next) {
     username: Joi.string().required(),
     email: Joi.string().email().required(),
     password: Joi.string().required(),
-    subscription: Joi.string().default("free"),
+    subscription: Joi.string(),
+    avatarURL: Joi.string()
   });
   const validate = createUserSchema.validate(req.body);
   if (validate.error) {
