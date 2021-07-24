@@ -4,6 +4,7 @@ function prepereUser(user) {
     email: user.email,
     username: user.username,
     subscription: user.subscription,
+    avatarURL: user.avatarURL
   };
 }
 
