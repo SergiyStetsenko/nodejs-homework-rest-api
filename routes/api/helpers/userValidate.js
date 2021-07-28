@@ -7,7 +7,9 @@ function validateUserAuth(req, res, next) {
     email: Joi.string().email().required(),
     password: Joi.string().required(),
     subscription: Joi.string(),
-    avatarURL: Joi.string()
+    avatarURL: Joi.string(),
+    verify: Joi.boolean()
+
   });
   const validate = createUserSchema.validate(req.body);
   if (validate.error) {

@@ -15,6 +15,14 @@ const userSchema = new Schema({
     default: "starter",
   },
   token: { type: String, default: null },
+  verify: {
+    type: Boolean,
+    default: false,
+  },
+  verifyToken: {
+    type: String,
+    required: [true, "Verify token is required"],
+  },
 });
 userSchema.statics.hashPassword = async (password) => {
   return bcryptjs.hash(password, parseInt(process.env.BCRYPT_SALT_ROUNDS));
