@@ -9,7 +9,6 @@ const { authService, upload, compressImage } = require("./userService");
 const { prepereUser } = require("../auth/user_serialize");
 const { authorize } = require("../auth/authorization");
 
-
 const router = Router();
 
 router.post(
@@ -58,6 +57,32 @@ router.patch(
     const userAvarav = await authService.updateAvatar(req);
     return res.status(200).send(userAvarav);
   }
+);
+
+router.get(
+  "/users/verify/:verificationToken",
+  asuncWrapper(async (req, res) => {
+    const userVerify = await authService.verifyEmail(
+      req.params.verificationToken
+    );
+    return res.status(200).send(userVerify);
+  })
+);
+
+router.post(
+  "/users/verify",
+  asuncWrapper(async (req, res) => {
+    if (!req.body.email) {
+      return res.status(400).sent({ message: "missing required field email" });
+    }
+    const verify = await authService.verify(req.body.email);
+    if (verify === true) {
+      return res
+        .status(400)
+        .send({ message: "Verification has already been passed" });
+    }
+    res.status(204).send({ message: "verification letter sent" });
+  })
 );
 
 module.exports = router;

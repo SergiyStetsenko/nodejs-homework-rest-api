@@ -7,6 +7,7 @@ const uuid = require("uuid");
 const { extname } = require("path");
 const gravatar = require("gravatar");
 const { promises: FsPromises } = require("fs");
+const { mailingClieng } = require("../helpers/mailing");
 const TMP_FILES_DIR_NAME = "draft";
 const FILES_DIR_NAME = "public/avatars";
 
@@ -32,7 +33,7 @@ async function compressImage(req, res, next) {
     TMP_FILES_DIR_NAME,
     FILES_DIR_NAME
   );
-  
+
   req.file.path = filePath;
   next();
 }
@@ -50,7 +51,12 @@ class AuthService {
       avatarURL: gravatar.url(email, { s: 250, r: "pg", d: "mm" }),
       email,
       subscription,
+      verifyToken: uuid.v4(),
     });
+    await mailingClieng.sendVerificationEmail(
+      newUser.email,
+      newUser.verifyToken
+    );
 
     return newUser;
   }
@@ -68,6 +74,7 @@ class AuthService {
     if (!isPasswordCorrect) {
       throw new Unauthorized(`Provided password is wrong`);
     }
+
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_EXPIRES_AT,
     });
@@ -107,6 +114,29 @@ class AuthService {
       throw new Unauthorized(`User is not found`);
     }
     return update;
+  }
+
+  async verifyEmail(verificationToken) {
+    const user = await UserModel.findOneAndUpdate(
+      { verifyToken: verificationToken },
+      { verify: true, verifyToken: null },
+      { new: true }
+    );
+    if (!user) {
+      throw new NotFound(
+        ` User with verification token '${verificationToken}' was not found`
+      );
+    }
+    return user;
+  }
+
+  async verify(email) {
+    const user = await UserModel.findOne({ email });
+    if (!user.verify === true) {
+      await mailingClieng.sendVerificationEmail(user.email, user.verifyToken);
+      return false;
+    }
+    return true;
   }
 }
 
